@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-margin">
+    <div class="msg-container">
+      <h1 class="{{HTMLclass}}">{{message}}</h1>
+    </div>
+    <div class="go-to-buttons">
+        <container class="forward-links">
+            <button>
+                <a href="{{link}}">Return to {{page_name}} Page ></a>
+            </button>
+        </container>
+    </div>
+</div>
+{% endblock content%}

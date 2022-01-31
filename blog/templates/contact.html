@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<div class="page-margin">
+    <div class="form-container center">
+      <h1>Contact Me</h1>
+        <form action="/contact/send" method="POST" action="">
+          {{ form.csrf_token }}
+          <p>{{ form.name(class='input')}}</p>
+          <p>{{ form.email(class='input')}}</p>
+          <p>{{ form.subject(class='input')}}</p>
+          <p>{{ form.message(class='input')}}</p>
+          <input type="submit" value="Send">
+        </form>
+    </div>
+</div>
+</form>
+  {% for error in form.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+  {% endfor %}
+{% endblock content%}

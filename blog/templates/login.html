@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-margin">
+    <div class="form-container">
+      <h1>Login</h1>
+        <form method="POST" action="">
+          {{ form.csrf_token }}
+          <p>{{ form.email(id='email', class='input') }}</p>
+          <p>{{ form.password(id='password', class='input') }}</p>
+          <input type="submit" value="Login">
+        </form>
+    </div>
+    <div class="go-to-buttons">
+        <container class="forward-links">
+            <button>
+                <a href="/register">Create an account ></a>
+            </button>
+        </container>
+    </div>
+</div>
+{% endblock content%}

@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+<div class="page-margin light-background">
+    <container class="post-container">
+    {% if post.image_file %}
+        <img class="project-img" src="{{ url_for('static', filename='img/' + post.image_file) }}" alt="post_img">
+    {% endif %}
+    <div class="post-header">
+        <h1 class="post_title">{{ post.title }}</h1>
+        <div class="bar"></div>
+        <b class="post-meta">{{ post.author }} | {{post.date.strftime('%d/%m/%Y - %H:%M')}}</b>
+    </div>
+    <div class="project-container">
+        <div class="detailed_description">{{post.content | safe}}</div>
+    </div>
+    <div class="post_rating">
+        <form class="rate-form" action="/rate" method="POST" id="rate">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" id="post_id" value="{{post.id}}">
+            <input type="hidden" id="critic_avg" value="{{critic_avg}}">
+            <input type="hidden" id="rating_list" value="{{all_ratings}}">
+            <input type="hidden" id="current_user" value="{{user.id}}">
+            <button type="submit" class="fa fa-star fa-2x rate-btn" id="first"></button>
+            <button type="submit" class="fa fa-star fa-2x rate-btn" id="second"></button>
+            <button type="submit" class="fa fa-star fa-2x rate-btn" id="third"></button>
+            <button type="submit" class="fa fa-star fa-2x rate-btn" id="fourth"></button>
+            <button type="submit" class="fa fa-star fa-2x rate-btn" id="fifth"></button>
+        </form>
+        <div id="confirm-box"></div>
+    </div>
+    </container>
+    <form id="comment-form" method="POST" action="/post/{{post.id}}/comment">
+      <div class="comment-box-container">
+          <div class="comment-box">
+               <input type="hidden" id="username" value="{{user.firstname}}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              {{ comment_form.body(id="comment_box", class='input', placeholder='Post a public comment...') }}
+          </div>
+          <div class="comment-submit-button">
+              <input id="comment-submit-button"  type="submit" value="Comment">
+          </div>
+      </div>
+    </form>
+    <div class="container comment_text">
+    <div class="row">
+        <div class="comment-card-space">
+            {% for comment in post.comments|sort(attribute='date', reverse=True)%}
+            <div class="comment-card">
+                <div class="comment-container">
+                    <div class="comment-header">
+                        <b>{{user_model.query.filter_by(id=comment.author).first().firstname}}</b>
+                        <p>{{comment.date.strftime('%d/%m/%Y - %H:%M')}}</p>
+                    </div>
+                    <div class="comment-body">
+                        <p >{{comment.body}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+</div>
+    <div class="go-to-buttons">
+        <container class="forward-links">
+            <button>
+                <a href="/home">Return to blog ></a>
+            </button>
+        </container>
+    </div>
+    <script src="{{ url_for('static',filename='js/rating.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/comments.js')}}"></script>
+ </body>
+{% endblock content %}

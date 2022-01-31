@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="msg-container text-center">
+        {% for message in messages %}
+            <p class="error-message">{{ message }}</p>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<div class="page-margin">
+    <div class="form-container">
+      <h1> Register</h1>
+        <form method="POST" action="">
+          {{ form.csrf_token }}
+          <p>{{ form.firstname(id='first_name_new', class='input') }}</p>
+          <p>{{ form.email(id='email_new', class='input') }}</p>
+          <p>{{ form.password(id='password_new', class='input') }}</p>
+          <p>{{ form.confirm_password(id='password_confirm', class='input') }}</p>
+          <input type="submit" value="Register">
+        </form>
+       {% for field, errors in form.errors.items() %}
+      <div class="msg-container error-message" >{{ ' '.join(errors) }}</div>
+      {% endfor %}
+    </div>
+    <div class="go-to-buttons">
+        <container class="forward-links">
+            <button>
+                <a href="/login">Login ></a>
+            </button>
+        </container>
+    </div>
+</div>
+{% endblock content%}

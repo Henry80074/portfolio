@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-margin text-center">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="msg-container text-center">
+        {% for message in messages %}
+            <p class="success-message">{{ message }}</p>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+    <h1>My Blog</h1>
+    <div id="order_val" value="{{order}}"></div>
+    <form method='POST' action="{{ url_for('home', order=order, page=page_num) }}" name="sort_by" id="sort_by" class="sort" value="{{order}}">
+        {{ form.csrf_token }}
+        <select id="select" name="options" type="input">
+            <option value="date_desc" {% if order =="date_desc" %} selected {% endif %}>order by newest</option>
+            <option value="date_asc" {% if order =="date_asc" %} selected {% endif %}>order by oldest</option>
+        </select>
+    </form>
+    <div class="container">
+      <div class="row">
+        <div class="card-space">
+            {% for post in posts.items %}
+             <div class="card" class="blog-post">
+                 {% if post.image_file %}
+                  <div class="portfolio-img-container">
+                    <a href="{{ url_for('post', post_id=post.id) }}"><img class="card-img" src="../static/img/{{post.image_file}}" alt="post_img"></a>
+                </div>
+                 {% endif %}
+                <div class="card-header">
+                    <a class="post_title project-link" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a>
+                    <div class="bar"></div>
+                    <b class="post-meta">{{post.author}} | {{post.date.strftime('%d/%m/%Y - %H:%M')}}</b>
+                </div>
+                <div class="text-container truncate">
+                    <div class="short_description">{{ post.content | safe }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+      </div>
+<!-- Code to paginate pages of blog
+ Adapted from blog post by Mclordemuraishem, 20/10/2020
+ Accessed 10/01/2022
+ https://betterprogramming.pub/simple-flask-pagination-example-4190b12c2e2e -->
+<div class="text-right">
+    <a href="{{ url_for('home', order=order, page=page_num) }}"
+       class="btn btn-outline-dark
+       {% if posts.page == 1 %}disabled{% endif %}">
+    </a>
+<!-- Loop through the number of pages to display a link for each-->
+{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+        {% if posts.page == page_num %}
+        <a href="{{ url_for('home', order=order, page=page_num) }}" class="page_btn btn-active">{{page_num}}</a>
+        {% else %}
+        <a href="{{ url_for('home', order=order, page=page_num) }}" class="page_btn">{{page_num}}</a>
+    {% endif %}
+    {% else %}
+        ...
+    {% endif %}
+{% endfor %}
+</div>
+<br>
+    <p>
+       Showing page {{ posts.page }} of {{ posts.pages }}
+    </p>
+    </div>
+</div>
+<!-- end of referenced code -->
+ <script src="{{ url_for('static',filename='js/order.js')}}"></script>
+{% endblock content %}
